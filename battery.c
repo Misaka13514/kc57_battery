@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0
-#include "pr.h"
 
 #include <linux/device.h>
 #include <linux/kernel.h>
@@ -11,7 +10,6 @@
 #include <linux/version.h>
 
 #include "ec.h"
-#include "features.h"
 
 /* ========================================================================== */
 
@@ -106,7 +104,7 @@ static struct acpi_battery_hook kc57_laptop_batt_hook = {
 
 int __init kc57_battery_setup(void)
 {
-	if (nobattery || !kc57_features.batt_charge_limit)
+	if (nobattery)
 		return -ENODEV;
 
 	battery_hook_register(&kc57_laptop_batt_hook);
@@ -122,3 +120,10 @@ void kc57_battery_cleanup(void)
 }
 
 #endif
+
+
+module_init(kc57_battery_setup);
+module_exit(kc57_battery_cleanup);
+
+MODULE_LICENSE("GPL");
+MODULE_DESCRIPTION("KC57 laptop battery driver");
